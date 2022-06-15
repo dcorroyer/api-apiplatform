@@ -1,0 +1,33 @@
+#setup your app
+
+path=$(ls -A 'vendor/')
+
+sudo systemctl restart docker
+
+if [ -f docker-compose.yml ]; then
+    echo "docker-compose.yml exists"
+else
+    echo "docker-compose.yml doesn't exists"
+    cp docker-compose.yml.dist docker-compose.yml
+    echo "docker-compose.yml copied from docker-compose.yml.dist"
+fi
+
+if [ -f .env ]; then
+    echo ".env exists"
+else
+    echo ".env doesn't exists"
+    cp .env.example .env
+    echo ".env copied from .env.example"
+fi
+
+docker-compose up -d
+
+if [[ ! -z "$path" ]]; then
+    echo "vendor is not empty"
+    docker-compose run --rm php8-service rm -r vendor/
+fi
+
+docker-compose run --rm php8-service composer install
+docker-compose run --rm php8-service php bin/console d:d:c
+
+echo "process finished"
