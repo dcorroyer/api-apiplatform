@@ -11,7 +11,7 @@ rebuild:
 	docker-compose build --no-cache
 
 back:
-	docker-compose exec php8-service sh
+	docker-compose exec php8-service bash
 
 symfonycreate:
 	docker-compose run --rm php8-service composer create-project symfony/website-skeleton .
