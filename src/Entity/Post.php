@@ -18,7 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         'put'
     ],
     denormalizationContext: ['groups' => ['write:post:item']],
-    normalizationContext: ['groups' => ['read:post:collection']]
+    normalizationContext: ['groups' => ['read:post:collection']],
+    paginationItemsPerPage: 5
 )]
 class Post
 {

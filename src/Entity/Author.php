@@ -20,7 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         'put'
     ],
     denormalizationContext: ['groups' => ['write:author:item']],
-    normalizationContext: ['groups' => ['read:author:collection']]
+    normalizationContext: ['groups' => ['read:author:collection']],
+    paginationItemsPerPage: 5
 )]
 class Author
 {
