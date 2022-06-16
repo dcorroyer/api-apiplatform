@@ -3,24 +3,42 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\UserRepository;
+use App\Repository\AuthorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource()]
-class User
+#[ORM\Entity(repositoryClass: AuthorRepository::class)]
+#[ApiResource(
+    itemOperations: [
+        'delete',
+        'get' => [
+            'normalization_context' => ['groups' => ['read:author:item']]
+        ],
+        'put'
+    ],
+    denormalizationContext: ['groups' => ['write:author:item']],
+    normalizationContext: ['groups' => ['read:author:collection']]
+)]
+class Author
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:author:collection', 'read:author:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[
+        Groups(['read:post:item', 'read:author:collection', 'read:author:item', 'write:author:item', 'write:post:item']),
+        Assert\Length(max: 128, maxMessage: "The title of the author must be less than 128 characters")
+    ]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class, orphanRemoval: true)]
+    #[Groups(['read:author:collection', 'read:author:item'])]
     private $posts;
 
     public function __construct()
