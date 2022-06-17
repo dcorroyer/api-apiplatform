@@ -43,12 +43,16 @@ class Post
     #[ORM\Column(type: 'string', length: 128)]
     #[
         Groups(['read:post:collection', 'read:post:item', 'write:post:item', 'read:user:item']),
-        Assert\Length(max: 128, maxMessage: "The title of the post must be less than 128 characters")
+        Assert\Length(max: 128, maxMessage: "The title of the post must be less than 128 characters"),
+        Assert\NotBlank(message: "The title cannot be blank")
     ]
     private $title;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['read:post:item', 'write:post:item'])]
+    #[
+        Groups(['read:post:item', 'write:post:item']),
+        Assert\NotBlank(message: "The content cannot be blank")
+    ]
     private $content;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -67,13 +71,17 @@ class Post
                 Post::STATUS_DRAFT,
                 Post::STATUS_DELETED
             ],
-        )
+        ),
+        Assert\NotBlank(message: "The status cannot be blank")
     ]
     private $status;
 
     #[ORM\ManyToOne(targetEntity: Author::class, cascade: ['persist'], inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:post:collection', 'read:post:item', 'write:post:item'])]
+    #[
+        Groups(['read:post:collection', 'read:post:item', 'write:post:item']),
+        Assert\NotNull(message: "The author cannot be null")
+    ]
     private $author;
 
     public function getId(): ?int

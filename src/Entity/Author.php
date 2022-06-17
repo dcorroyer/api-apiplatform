@@ -36,7 +36,8 @@ class Author
     #[ORM\Column(type: 'string', length: 255)]
     #[
         Groups(['read:post:item', 'read:author:collection', 'read:author:item', 'write:author:item', 'write:post:item']),
-        Assert\Length(max: 128, maxMessage: "The title of the author must be less than 128 characters")
+        Assert\Length(max: 128, maxMessage: "The title of the author must be less than 128 characters"),
+        Assert\NotBlank(message: "The name cannot be blank")
     ]
     private $name;
 

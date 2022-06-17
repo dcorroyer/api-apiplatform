@@ -1,0 +1,3 @@
+App\Entity\Author:
+  author_{1..3}:
+    name: <name()>

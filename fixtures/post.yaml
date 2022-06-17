@@ -1,0 +1,19 @@
+App\Entity\Post:
+  post_{1..20}:
+    title: <title()>
+    content: <sentence(2)>
+    publishedAt: <dateTime()>
+    status: 'published'
+    author: '@author_*'
+  post_{21..30}:
+    title: <title()>
+    content: <sentence(2)>
+    publishedAt: <dateTime()>
+    status: 'deleted'
+    author: '@author_*'
+  post_{31..40}:
+    title: <title()>
+    content: <sentence(2)>
+    publishedAt: <dateTime()>
+    status: 'draft'
+    author: '@author_*'
