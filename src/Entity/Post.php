@@ -25,6 +25,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Post
 {
+    const STATUS=[
+        'draft',
+        'published',
+        'deleted'
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -50,7 +56,12 @@ class Post
     private $publishedAt;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:post:collection', 'read:post:item', 'write:post:item'])]
+    #[
+        Groups(['read:post:collection', 'read:post:item', 'write:post:item']),
+        Assert\Choice(
+            choices: Post::STATUS
+        )
+    ]
     private $status;
 
     #[ORM\ManyToOne(targetEntity: Author::class, cascade: ['persist'], inversedBy: 'posts')]
