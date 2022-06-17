@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Author;
 use App\Entity\Post;
 use App\Entity\User;
-use DateTimeImmutable;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -45,7 +45,7 @@ class AppFixtures extends Fixture
 
                 $post->setTitle($faker->title())
                     ->setContent($faker->text())
-                    ->setPublishedAt(new DateTimeImmutable())
+                    ->setPublishedAt(new DateTime())
                     ->setStatus($faker->randomElement(['draft', 'published', 'deleted']))
                     ->setAuthor($author)
                 ;

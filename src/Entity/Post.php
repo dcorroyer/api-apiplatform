@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PostRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,6 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['read:post:collection']],
     paginationItemsPerPage: 5
 )]
+#[ApiFilter(SearchFilter::class, properties: ['status' => 'exact'])]
 class Post
 {
     const STATUS_PUBLISHED = 'published';
