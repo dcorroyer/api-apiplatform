@@ -13,7 +13,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-#[UniqueEntity("title", message: "A post with this title already exists")]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
     collectionOperations: [
@@ -62,7 +61,8 @@ class Post
     #[ORM\Column(type: 'datetime', nullable: true)]
     #[
         Groups(['read:post:collection', 'read:post:item', 'write:post:item']),
-        Assert\Type("\DateTimeInterface")
+        Assert\Type("\DateTimeInterface"),
+        Assert\GreaterThanOrEqual('today')
     ]
     private $publishedAt;
 
