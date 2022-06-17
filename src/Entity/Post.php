@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PostRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -11,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[UniqueEntity("title", message: "A post with this title already exists")]
+#[ORM\HasLifecycleCallbacks]
 #[ApiResource(
     itemOperations: [
         'delete',
@@ -25,11 +27,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Post
 {
-    const STATUS=[
-        'draft',
-        'published',
-        'deleted'
-    ];
+    const STATUS_PUBLISHED = 'published';
+    const STATUS_DRAFT     = 'draft';
+    const STATUS_DELETED   = 'deleted';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -48,7 +48,7 @@ class Post
     #[Groups(['read:post:item', 'write:post:item'])]
     private $content;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     #[
         Groups(['read:post:collection', 'read:post:item', 'write:post:item']),
         Assert\Type("\DateTimeInterface")
@@ -59,7 +59,11 @@ class Post
     #[
         Groups(['read:post:collection', 'read:post:item', 'write:post:item']),
         Assert\Choice(
-            choices: Post::STATUS
+            choices: [
+                Post::STATUS_PUBLISHED,
+                Post::STATUS_DRAFT,
+                Post::STATUS_DELETED
+            ],
         )
     ]
     private $status;
@@ -98,16 +102,34 @@ class Post
         return $this;
     }
 
-    public function getPublishedAt(): ?\DateTimeImmutable
+    public function getPublishedAt(): ?DateTime
     {
         return $this->publishedAt;
     }
-
-    public function setPublishedAt(?\DateTimeImmutable $publishedAt): self
+    
+    public function setPublishedAt(?DateTime $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
 
         return $this;
+    }
+
+    #[ORM\PreFlush]
+    public function managePublishedAt()
+    {
+        switch ($this->getStatus()) {
+            case Post::STATUS_PUBLISHED:
+                $this->publishedAt = new DateTime();
+                break;
+            case Post::STATUS_DRAFT:
+                if (null === $this->publishedAt) {
+                    $this->publishedAt = new DateTime();
+                }
+                break;
+            case Post::STATUS_DELETED:
+                $this->publishedAt = null;
+                break;
+        }
     }
 
     public function getStatus(): ?string
