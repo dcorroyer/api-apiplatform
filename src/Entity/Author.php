@@ -14,6 +14,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
 #[UniqueEntity("name", message: "An author with this name already exists")]
 #[ApiResource(
+    collectionOperations: [
+        'get',
+        'post' => ['security' => 'is_granted("ROLE_ADMIN")']
+    ],
     itemOperations: [
         'delete',
         'get' => [

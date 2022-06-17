@@ -29,5 +29,13 @@ fi
 
 docker-compose run --rm php8-service composer install
 docker-compose run --rm php8-service php bin/console d:d:c
+docker-compose run --rm php8-service php bin/console d:s:u --force
+docker-compose run --rm php8-service php bin/console d:f:l --no-interaction
 
-echo "process finished"
+docker-compose run --rm php8-service php bin/console --env=test d:d:c
+docker-compose run --rm php8-service php bin/console --env=test d:s:u --force
+docker-compose run --rm php8-service php bin/console hautelook:fixtures:load --no-interaction
+
+sudo chmod -R 777 .
+
+echo "process finished, if you want to run test, run the command: make back, then: vendor/bin/phpunit"

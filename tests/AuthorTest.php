@@ -31,6 +31,7 @@ class AuthorTest extends ApiTestCase
         $user = new User();
         $user->setEmail('admin@api.com');
         $user->setPassword('password');
+        $user->setRoles(['ROLE_ADMIN']);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
