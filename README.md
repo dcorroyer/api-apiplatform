@@ -1,4 +1,4 @@
-# Test Zelty
+# API made with Symfony and API Platform
 
 An API built with API Platform on a Symfony 6 with php 8 application.
 
