@@ -29,7 +29,7 @@ You have collect the API Token I voluntary left in the code to be able to test t
 
     root / secret
 
-    Zelty > api_token > token
+    Apiplatform > api_token > token
 
 Since you collected the token, you have to use **Postman** and add in your request, 2 keys in **Headers**:
 
